@@ -10,7 +10,7 @@ import { extendTailwindMerge } from "tailwind-merge"
  * 같이 쓸 때 둘이 같은 그룹으로 취급돼 뒤에 온 쪽이 앞의 것을 지워 버립니다.
  * 실제로 Input의 text-body-md가 text-ink에 먹혀 사라지는 버그가 있었습니다.
  */
-const fontSizeTokens = [
+export const fontSizeTokens = [
   "text-rating-display",
   "text-display-xl",
   "text-display-lg",
@@ -29,6 +29,14 @@ const fontSizeTokens = [
   "text-button-sm",
   "text-link",
   "text-nav-link",
+  // 마케팅 스케일 (랜딩 전용)
+  "text-hero",
+  "text-section-lg",
+  "text-section",
+  "text-stat",
+  "text-lede",
+  "text-eyebrow",
+  "text-eyebrow-sm",
 ] as const
 
 const twMerge = extendTailwindMerge({

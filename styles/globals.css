@@ -48,12 +48,18 @@
   --color-muted-soft: var(--muted-soft);
   --color-legal-link: var(--legal-link);
 
+  /* 어두운 면(푸터) 위 텍스트. 라이트 전용 시스템의 유일한 반전 면입니다 */
+  --color-on-inverse: var(--on-inverse);
+  --color-on-inverse-muted: var(--on-inverse-muted);
+
   /* ---------- 색상: 표면 & 경계 ---------- */
   --color-surface-soft: var(--surface-soft);
   --color-surface-strong: var(--surface-strong);
   --color-hairline: var(--hairline);
   --color-hairline-soft: var(--hairline-soft);
   --color-border-strong: var(--border-strong);
+  /* 컴포넌트 경계 전용. 장식용 hairline과 달리 WCAG 1.4.11의 3:1을 만족합니다 */
+  --color-control: var(--control);
   --color-scrim: var(--scrim);
 
   --color-sidebar: var(--sidebar);
@@ -159,6 +165,53 @@
   --text-nav-link--line-height: 1.25;
   --text-nav-link--font-weight: 600;
 
+  /* ---------- 타이포그래피: 마케팅 스케일 ---------- */
+  /*
+   * 위의 스케일은 제품 UI(지도·카드·목록)용이라 h1이 28px에서 멈춥니다.
+   * 랜딩 페이지는 첫 화면에서 위계를 만들어야 해서 더 큰 타입이 필요하고,
+   * Claude Design의 Home 시안이 62px를 지정하고 있습니다.
+   * 두 스케일이 섞이지 않도록 이름을 분리했습니다 —
+   * 아래 토큰은 랜딩·소개 페이지 전용이며 제품 UI에 쓰지 마세요.
+   */
+
+  /* 랜딩 h1. 375px에서 38px, 1000px 이상에서 62px로 매끄럽게 커집니다 */
+  --text-hero: clamp(2.375rem, 3.84vw + 1.475rem, 3.875rem);
+  --text-hero--line-height: 1.08;
+  --text-hero--font-weight: 800;
+  --text-hero--letter-spacing: -0.035em;
+
+  /* 강조 섹션 제목. 375px에서 30px, 1024px 이상에서 40px */
+  --text-section-lg: clamp(1.875rem, 1.5408vw + 1.5139rem, 2.5rem);
+  --text-section-lg--line-height: 1.25;
+  --text-section-lg--font-weight: 800;
+  --text-section-lg--letter-spacing: -0.03em;
+
+  /* 일반 섹션 제목. 375px에서 26px, 1024px 이상에서 34px */
+  --text-section: clamp(1.625rem, 1.2327vw + 1.3361rem, 2.125rem);
+  --text-section--line-height: 1.2;
+  --text-section--font-weight: 800;
+  --text-section--letter-spacing: -0.03em;
+
+  --text-stat: 1.875rem; /* 30px — 통계 수치, 전화번호 */
+  --text-stat--line-height: 1.1;
+  --text-stat--font-weight: 700;
+  --text-stat--letter-spacing: -0.02em;
+
+  --text-lede: 1.09375rem; /* 17.5px — 히어로 본문, 섹션 부제 */
+  --text-lede--line-height: 1.7;
+  --text-lede--font-weight: 400;
+
+  /* `uppercase`와 함께 쓰세요 (Tailwind text 토큰은 대문자 변환 미지원) */
+  --text-eyebrow: 0.71875rem; /* 11.5px — 섹션 상단 대문자 라벨 */
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--font-weight: 600;
+  --text-eyebrow--letter-spacing: 0.16em;
+
+  --text-eyebrow-sm: 0.65625rem; /* 10.5px — 푸터 컬럼 헤드 */
+  --text-eyebrow-sm--line-height: 1;
+  --text-eyebrow-sm--font-weight: 600;
+  --text-eyebrow-sm--letter-spacing: 0.14em;
+
   /* ---------- 라운딩 ---------- */
   /* Airbnb는 하드 코너가 없습니다. 모든 인터랙티브 요소가 둥급니다 */
   --radius-xs: 0.25rem; /* 4px */
@@ -175,9 +228,16 @@
   --shadow-float: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0,
     rgba(0, 0, 0, 0.1) 0 4px 8px 0;
 
+  /* ---------- 모션 ---------- */
+  /* 등장 애니메이션 전용 감속 곡선. 시안이 지정한 값입니다 */
+  --ease-reveal: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* 첫 화면(히어로)은 스크롤을 기다리지 않고 바로 재생합니다 */
+  --animate-rise-in: rise-in 0.6s ease both;
+
   /* ---------- 컨테이너 ---------- */
   --container-content: 80rem; /* 1280px — 목록/편집 페이지 */
   --container-detail: 67.5rem; /* 1080px — 상세 페이지 */
+  --container-marketing: 73.75rem; /* 1180px — 랜딩/소개 페이지 */
 }
 
 :root {
@@ -199,6 +259,14 @@
   --popover-foreground: oklch(0.252 0 0);
   --muted-foreground: oklch(0.5243 0 0); /* #6a6a6a — 5.41:1 */
   --muted-soft: oklch(0.66 0 0); /* #929292 — 3.11:1, 비활성 텍스트 전용 */
+
+  /*
+   * 어두운 면 위 텍스트. 위의 텍스트 위계는 전부 흰 배경 기준이라
+   * 그대로 뒤집어 쓸 수 없습니다 — muted-foreground(#6a6a6a)는 ink 배경에서
+   * 2.94:1로 미달합니다.
+   */
+  --on-inverse: oklch(0.8975 0 0); /* #dddddd — ink 배경 위 11.71:1 */
+  --on-inverse-muted: oklch(0.66 0 0); /* #929292 — ink 배경 위 5.11:1 */
 
   /* 브랜드 */
   --brand: oklch(0.6579 0.2309 17.07); /* #ff385c Rausch — 비텍스트 전용 */
@@ -224,7 +292,14 @@
   --border: oklch(0.8975 0 0); /* #dddddd hairline */
   --hairline: oklch(0.8975 0 0);
   --hairline-soft: oklch(0.9401 0 0); /* #ebebeb */
-  --border-strong: oklch(0.8109 0 0); /* #c1c1c1 */
+  --border-strong: oklch(0.8109 0 0); /* #c1c1c1 — 1.80:1, 장식 아웃라인 전용 */
+  /*
+   * 입력 필드·체크박스 등 "컴포넌트가 여기 있다"를 알리는 경계선.
+   * hairline(#dddddd, 1.36:1)과 border-strong(#c1c1c1, 1.80:1)은 둘 다
+   * WCAG 1.4.11의 3:1에 미달해 이 용도로 쓸 수 없습니다.
+   * 경위: docs/issue/2026-08-08-input-border-nontext-contrast.md
+   */
+  --control: oklch(0.66 0 0); /* #929292 — 흰 배경 위 3.11:1 */
   --input: oklch(0.8975 0 0);
   --ring: oklch(0.252 0 0); /* 포커스는 ink. 글로우 없이 또렷하게 */
 
@@ -249,6 +324,17 @@
   --chart-5: oklch(0.66 0 0);
 }
 
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -256,6 +342,15 @@
 
   body {
     @apply bg-background text-foreground font-sans text-body-md;
+
+    /*
+     * 한국어는 기본 규칙(word-break: normal)에서 어절 중간이라도 줄을 끊습니다.
+     * "흡연구역을"이 "흡연구 / 역을"로 갈라져 읽기 어려워집니다.
+     * keep-all로 어절을 붙여 두고, 한 어절이 컨테이너보다 길어 넘칠 때만
+     * break-word가 예외적으로 끊게 합니다.
+     */
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   /* 모션 민감 사용자를 위해 애니메이션을 실질적으로 정지시킵니다 */
