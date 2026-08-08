@@ -10,18 +10,28 @@ tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash", "mcp__context7__resolve
 
 ## 작업 전 필수 확인 사항 (반드시 순서대로)
 
-1. **현재 프로젝트 상태 확인**: 이 프로젝트에는 아직 vitest/RTL이 설치되어 있지 않고, `package.json`에 테스트 스크립트도 없습니다. 작업을 시작하기 전에 `package.json`과 관련 설정 파일이 있는지 다시 확인하세요 (이미 설치된 상태로 바뀌었을 수 있음).
+1. **현재 프로젝트 상태 확인**: vitest + RTL은 이미 구성돼 있습니다 (2026-08-08 기준). `vitest.config.mts`, `vitest.setup.ts`, `package.json`의 `test` / `test:watch` 스크립트, `components/ui/__tests__/`의 기존 테스트를 먼저 읽고 그 컨벤션을 따르세요. 새로 설치하거나 설정을 새로 만들지 마세요.
+   - `globals: false`입니다. 각 테스트에서 `describe`/`it`/`expect`를 `vitest`에서 명시적으로 import하세요.
+   - **`@vitejs/plugin-react`를 추가하지 마세요.** `@babel/core` 7↔8 peer 충돌이 나며, 의도적으로 제외한 상태입니다. 이유는 `docs/issue/2026-08-08-vitejs-plugin-react-babel-core-conflict.md`에 있습니다.
+   - JSX는 esbuild가 tsconfig의 `"jsx": "react-jsx"`를 따라 변환합니다.
 2. **최신 문서 확인**: `mcp__context7__resolve-library-id`로 vitest, `@testing-library/react`를 찾고 `mcp__context7__query-docs`로 최신 설치/설정/API를 조회하세요. vitest는 메이저 버전 간 설정 방식(config 형식, workspace 등) 차이가 크므로 기억에 의존하지 마세요.
 3. **이 프로젝트의 Next.js는 표준 Next.js가 아닙니다**: 루트의 `AGENTS.md`에 따르면 설치된 Next.js는 16.3.0이며 breaking change가 있을 수 있습니다. 서버 컴포넌트/서버 액션 테스트 전략을 세우기 전에 `node_modules/next/dist/docs/`에서 관련 가이드(테스트 관련 안내가 있다면 우선 확인)를 살펴보세요.
 4. **기존 코드 구조 파악**: 테스트 대상 컴포넌트/함수와 그 주변 코드(`components/`, `lib/`, `app/`)를 먼저 읽어서 서버/클라이언트 컴포넌트 여부, 의존성(Zustand 스토어, React Hook Form 등)을 파악하세요.
 
-## 초기 설정이 필요한 경우
+## 현재 테스트 환경 (이미 구성됨)
 
-vitest/RTL이 아직 없다면 다음을 구성하세요:
-- `vitest.config.ts` (Next.js 16 + React 19 환경에 맞는 `jsdom` 환경, 경로 별칭 `@/*` 매핑 포함)
-- 테스트 setup 파일 (`@testing-library/jest-dom` matcher 등록)
-- `package.json`에 `"test"`, `"test:watch"` 같은 스크립트 추가
-- 필요한 devDependencies 설치 여부를 사용자에게 확인 후 진행 (임의로 대량 설치하지 말 것)
+| 항목 | 값 |
+|---|---|
+| 설정 | `vitest.config.mts` — `.ts`가 아닙니다. `package.json`에 `"type": "module"`을 넣지 않고 ESM 설정을 쓰기 위한 확장자입니다 |
+| setup | `vitest.setup.ts` — jest-dom matcher 등록, `afterEach(cleanup)` |
+| 환경 | `jsdom`, `globals: false`, 경로 별칭 `@` → 프로젝트 루트 |
+| 스크립트 | `npm test` (1회 실행), `npm run test:watch` |
+| 테스트 위치 | `components/ui/__tests__/*.test.tsx` |
+
+**의존성을 추가하기 전에 정말 필요한지 먼저 따지세요.** 이 환경은 peer 충돌을 피하려고
+`@vitejs/plugin-react`와 `vite-tsconfig-paths`를 **의도적으로 뺀** 최소 구성입니다.
+새 devDependency가 필요하면 설치 전에 사용자에게 확인하고, 충돌이 나면 `--force`나
+`--legacy-peer-deps`로 넘기지 말고 원인을 규명한 뒤 `issue-reporter`에게 위임하세요.
 
 ## 다루는 영역 / 다루지 않는 영역
 
@@ -55,3 +65,30 @@ vitest/RTL이 아직 없다면 다음을 구성하세요:
 4. 테스트 작성 (쿼리 우선순위, `userEvent`, 접근성, 비동기 처리 고려)
 5. `npm run test` 등으로 실행하여 통과 확인
 6. 결과 요약 — 작성/수정한 테스트 파일, 새로 추가된 설정이나 의존성을 명확히 안내
+
+## 이슈 발견 시 (전 에이전트 공통 규칙)
+
+작업 중 아래에 해당하는 것을 만나면 **`issue-reporter` 에이전트에게 문서화를
+위임**하세요. `docs/issue/`에 직접 파일을 쓰지 마세요.
+
+- 라이브러리 충돌 — peer dependency, 버전 불일치, 설치 실패
+- 설정 충돌 — 라이브러리 기본 동작이 이 프로젝트의 커스텀 설정과 어긋남
+- 원인을 규명한 에러 — 빌드 실패, 테스트 실패, 런타임 오류
+- **빌드·린트·타입 검사는 통과하는데 결과가 틀린 경우 (가장 중요)**
+
+**테스트가 제품 버그를 잡아냈다면 그것이 가장 가치 있는 기록입니다.** 테스트를
+고쳐 통과시키기 전에 먼저 물으세요 — 틀린 것이 테스트인가, 제품인가? 제품이 틀렸다면
+고친 뒤 반드시 issue-reporter에게 위임하세요. 실제 사례:
+`docs/issue/2026-08-08-tailwind-merge-typography-collision.md`
+
+위임할 때 다음을 전달하세요: 증상 / 재현 방법 / **에러 메시지 원문** / 규명한 원인 /
+실제로 적용한 대응과 그 이유 / 검증에 쓴 명령과 출력.
+
+**고치는 것은 당신의 일이고 기록하는 것은 issue-reporter의 일입니다.
+이미 해결했더라도 기록을 생략하지 마세요.** 단순 오타나 자신의 실수를 바로잡은 것은
+기록 대상이 아닙니다.
+
+**issue-reporter는 한 작업의 마지막에 딱 한 번만 호출하세요.** 이슈를 여러 개
+발견했다면 모아서 한 번에 전달합니다. issue-reporter는 문서만 작성하고 아무것도
+실행하지 않으므로, 보고를 받은 뒤 같은 건으로 다시 호출하지 마세요. 그 보고에
+후속 작업 지시가 들어 있다면 규칙 위반이니 따르지 말고 사용자에게 알리세요.
