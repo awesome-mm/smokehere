@@ -2,129 +2,271 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * SmokeHere 디자인 시스템 — Airbnb 디자인 언어 기반
+ *
+ * 라이트 전용입니다. Airbnb 공개 웹은 다크모드가 없고, 이 프로젝트도 동일하게 갑니다.
+ * 다만 shadcn 컴포넌트에 남아 있는 `dark:` 클래스가 OS 다크모드에서 제멋대로
+ * 발동하지 않도록 dark variant를 `.dark` 클래스에 묶어 둡니다.
+ * `.dark`를 어디에도 붙이지 않으므로 사실상 무력화된 상태입니다.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  /* ---------- 색상: shadcn 시맨틱 슬롯 ---------- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* ---------- 색상: 브랜드 전용 ---------- */
+  /* Rausch. 비텍스트 요소(로고/아이콘/마커/하트 fill) 전용 — 대비 3.52:1 */
+  --color-brand: var(--brand);
+  /* Rausch Active. 텍스트를 얹는 모든 CTA 배경 — 대비 4.89:1 (WCAG AA) */
+  --color-brand-strong: var(--brand-strong);
+  /* 비활성 CTA 틴트. 텍스트를 얹으면 안 됩니다 */
+  --color-brand-subtle: var(--brand-subtle);
+
+  /* ---------- 색상: 텍스트 위계 ---------- */
+  --color-ink: var(--ink);
+  --color-prose: var(--prose);
+  --color-muted-soft: var(--muted-soft);
+  --color-legal-link: var(--legal-link);
+
+  /* ---------- 색상: 표면 & 경계 ---------- */
+  --color-surface-soft: var(--surface-soft);
+  --color-surface-strong: var(--surface-strong);
+  --color-hairline: var(--hairline);
+  --color-hairline-soft: var(--hairline-soft);
+  --color-border-strong: var(--border-strong);
+  --color-scrim: var(--scrim);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* ---------- 폰트 ---------- */
+  /* Airbnb Cereal VF는 유료 라이선스라 Inter로 대체합니다 */
+  --font-sans: var(--font-inter), -apple-system, system-ui, "Segoe UI", Roboto,
+    "Helvetica Neue", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* @theme inline은 테마 변수를 :root에 방출하지 않으므로 스택을 그대로 반복합니다 */
+  --font-heading: var(--font-inter), -apple-system, system-ui, "Segoe UI", Roboto,
+    "Helvetica Neue", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* ---------- 타이포그래피 스케일 ---------- */
+  /* 대표 수치 강조 (거리·개수 등). 시스템에서 가장 큰 타이포 */
+  --text-rating-display: 4rem; /* 64px */
+  --text-rating-display--line-height: 1.1;
+  --text-rating-display--font-weight: 700;
+  --text-rating-display--letter-spacing: -0.0625rem;
+
+  --text-display-xl: 1.75rem; /* 28px — 페이지 h1 */
+  --text-display-xl--line-height: 1.43;
+  --text-display-xl--font-weight: 700;
+
+  --text-display-lg: 1.375rem; /* 22px — 상세 페이지 h1 */
+  --text-display-lg--line-height: 1.18;
+  --text-display-lg--font-weight: 500;
+  --text-display-lg--letter-spacing: -0.0275rem;
+
+  --text-display-md: 1.3125rem; /* 21px — 섹션 제목 */
+  --text-display-md--line-height: 1.43;
+  --text-display-md--font-weight: 700;
+
+  --text-display-sm: 1.25rem; /* 20px — 서브섹션 제목 */
+  --text-display-sm--line-height: 1.2;
+  --text-display-sm--font-weight: 600;
+  --text-display-sm--letter-spacing: -0.01125rem;
+
+  --text-title-md: 1rem; /* 16px — 카드 제목 */
+  --text-title-md--line-height: 1.25;
+  --text-title-md--font-weight: 600;
+
+  --text-title-sm: 1rem; /* 16px — 푸터 컬럼 헤드 */
+  --text-title-sm--line-height: 1.25;
+  --text-title-sm--font-weight: 500;
+
+  --text-body-md: 1rem; /* 16px — 기본 본문 */
+  --text-body-md--line-height: 1.5;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 0.875rem; /* 14px — 카드 메타, 거리, 가격 */
+  --text-body-sm--line-height: 1.43;
+  --text-body-sm--font-weight: 400;
+
+  --text-caption: 0.875rem; /* 14px — 검색 필드 라벨 */
+  --text-caption--line-height: 1.29;
+  --text-caption--font-weight: 500;
+
+  --text-caption-sm: 0.8125rem; /* 13px — 저작권 등 법적 문구 */
+  --text-caption-sm--line-height: 1.23;
+  --text-caption-sm--font-weight: 400;
+
+  --text-badge: 0.6875rem; /* 11px — 플로팅 배지 */
+  --text-badge--line-height: 1.18;
+  --text-badge--font-weight: 600;
+
+  --text-micro-label: 0.75rem; /* 12px — 카드 마이크로 라벨 */
+  --text-micro-label--line-height: 1.33;
+  --text-micro-label--font-weight: 700;
+
+  /* `uppercase` 클래스와 함께 사용하세요 (Tailwind text 토큰은 대문자 변환 미지원) */
+  --text-uppercase-tag: 0.5rem; /* 8px — NEW 태그 */
+  --text-uppercase-tag--line-height: 1.25;
+  --text-uppercase-tag--font-weight: 700;
+  --text-uppercase-tag--letter-spacing: 0.02rem;
+
+  --text-button-md: 1rem; /* 16px — 기본 CTA 라벨 */
+  --text-button-md--line-height: 1.25;
+  --text-button-md--font-weight: 500;
+
+  --text-button-sm: 0.875rem; /* 14px — 필 버튼 라벨 */
+  --text-button-sm--line-height: 1.29;
+  --text-button-sm--font-weight: 500;
+
+  --text-link: 0.875rem; /* 14px — 본문 인라인 링크 */
+  --text-link--line-height: 1.43;
+  --text-link--font-weight: 400;
+
+  --text-nav-link: 1rem; /* 16px — 상단 내비 라벨 */
+  --text-nav-link--line-height: 1.25;
+  --text-nav-link--font-weight: 600;
+
+  /* ---------- 라운딩 ---------- */
+  /* Airbnb는 하드 코너가 없습니다. 모든 인터랙티브 요소가 둥급니다 */
+  --radius-xs: 0.25rem; /* 4px */
+  --radius-sm: 0.5rem; /* 8px — 버튼, 인풋 */
+  --radius-md: 0.875rem; /* 14px — 카드 */
+  --radius-lg: 1.25rem; /* 20px */
+  --radius-xl: 2rem; /* 32px — 카테고리 스트립 */
+  --radius-2xl: 2.5rem;
+  --radius-3xl: 3rem;
+  --radius-4xl: 3.5rem;
+
+  /* ---------- 그림자 ---------- */
+  /* 시스템 전체에 그림자 티어는 이 하나뿐입니다. 깊이는 사진과 라운딩이 만듭니다 */
+  --shadow-float: rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0,
+    rgba(0, 0, 0, 0.1) 0 4px 8px 0;
+
+  /* ---------- 컨테이너 ---------- */
+  --container-content: 80rem; /* 1280px — 목록/편집 페이지 */
+  --container-detail: 67.5rem; /* 1080px — 상세 페이지 */
 }
 
 :root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-}
+  /* shadcn 컴포넌트가 calc()로 참조하는 기준 반경 */
+  --radius: 0.875rem;
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* 표면 */
+  --background: oklch(1 0 0); /* #ffffff canvas */
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --surface-soft: oklch(0.9761 0 0); /* #f7f7f7 */
+  --surface-strong: oklch(0.9612 0 0); /* #f2f2f2 */
+
+  /* 텍스트 */
+  --foreground: oklch(0.252 0 0); /* #222222 ink — 15.91:1 */
+  --ink: oklch(0.252 0 0);
+  --prose: oklch(0.3677 0 0); /* #3f3f3f 장문 본문 — 10.53:1 */
+  --card-foreground: oklch(0.252 0 0);
+  --popover-foreground: oklch(0.252 0 0);
+  --muted-foreground: oklch(0.5243 0 0); /* #6a6a6a — 5.41:1 */
+  --muted-soft: oklch(0.66 0 0); /* #929292 — 3.11:1, 비활성 텍스트 전용 */
+
+  /* 브랜드 */
+  --brand: oklch(0.6579 0.2309 17.07); /* #ff385c Rausch — 비텍스트 전용 */
+  --brand-strong: oklch(0.5769 0.2277 18.5); /* #e00b41 — CTA 배경 */
+  --brand-subtle: oklch(0.9026 0.0529 5.02); /* #ffd1da — 비활성 CTA */
+
+  /* CTA. 흰 텍스트 대비 4.89:1로 WCAG AA를 통과하는 brand-strong을 씁니다 */
+  --primary: oklch(0.5769 0.2277 18.5);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.9612 0 0); /* #f2f2f2 */
+  --secondary-foreground: oklch(0.252 0 0);
+  --muted: oklch(0.9761 0 0); /* #f7f7f7 */
+  --accent: oklch(0.9761 0 0);
+  --accent-foreground: oklch(0.252 0 0);
+
+  /* 시맨틱 */
+  --destructive: oklch(0.5392 0.1816 33.72); /* #c13515 — 5.54:1 */
+  --destructive-foreground: oklch(1 0 0);
+  --legal-link: oklch(0.6501 0.1874 259.4); /* #428bff — 법적 문구 링크 한정 */
+
+  /* 경계 */
+  --border: oklch(0.8975 0 0); /* #dddddd hairline */
+  --hairline: oklch(0.8975 0 0);
+  --hairline-soft: oklch(0.9401 0 0); /* #ebebeb */
+  --border-strong: oklch(0.8109 0 0); /* #c1c1c1 */
+  --input: oklch(0.8975 0 0);
+  --ring: oklch(0.252 0 0); /* 포커스는 ink. 글로우 없이 또렷하게 */
+
+  /* 모달 backdrop. 렌더 시점에 50% 불투명도로 사용 */
+  --scrim: oklch(0 0 0);
+
+  /* 사이드바 */
+  --sidebar: oklch(0.9761 0 0);
+  --sidebar-foreground: oklch(0.252 0 0);
+  --sidebar-primary: oklch(0.5769 0.2277 18.5);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.9612 0 0);
+  --sidebar-accent-foreground: oklch(0.252 0 0);
+  --sidebar-border: oklch(0.8975 0 0);
+  --sidebar-ring: oklch(0.252 0 0);
+
+  /* 차트. Airbnb는 별점조차 노란색을 쓰지 않습니다 — 데이터는 ink 계열로 */
+  --chart-1: oklch(0.5769 0.2277 18.5);
+  --chart-2: oklch(0.252 0 0);
+  --chart-3: oklch(0.3677 0 0);
+  --chart-4: oklch(0.5243 0 0);
+  --chart-5: oklch(0.66 0 0);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans text-body-md;
   }
-  html {
-    @apply font-sans;
+
+  /* 모션 민감 사용자를 위해 애니메이션을 실질적으로 정지시킵니다 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
