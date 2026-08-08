@@ -39,6 +39,19 @@ describe("Input", () => {
     expect(input).toHaveClass("rounded-sm")
   })
 
+  it("테두리가 비텍스트 대비 3:1을 만족하는 control 토큰을 쓴다", () => {
+    // 이 1px 선이 입력 필드의 경계를 알리는 유일한 시각 정보라 WCAG 1.4.11의
+    // 3:1이 필요합니다. hairline(#dddddd)은 1.36:1로 미달합니다.
+    // 경위: docs/issue/2026-08-08-input-border-nontext-contrast.md
+    render(<Input aria-label="검색어" />)
+
+    // disabled:border-hairline-soft 같은 변형이 걸리지 않도록 토큰 단위로 비교합니다
+    const classes = screen.getByRole("textbox").className.split(/\s+/)
+
+    expect(classes).toContain("border-control")
+    expect(classes).not.toContain("border-hairline")
+  })
+
   it("본문 크기를 16px로 고정해 iOS 자동 확대를 막는다", () => {
     render(<Input aria-label="검색어" />)
 

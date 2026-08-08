@@ -15,7 +15,10 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "h-12 w-full min-w-0 rounded-sm border border-hairline bg-background px-4 text-body-md text-ink transition-colors outline-none",
+        // 테두리는 hairline(1.36:1)이 아니라 control(3.11:1)입니다.
+        // 이 선이 입력 필드의 경계를 알리는 유일한 시각 정보라 WCAG 1.4.11의
+        // 비텍스트 대비 3:1을 만족해야 합니다.
+        "h-12 w-full min-w-0 rounded-sm border border-control bg-background px-4 text-body-md text-ink transition-colors outline-none",
         // placeholder는 비활성 텍스트 전용 톤(3.11:1). 읽혀야 하는 값은 text-ink로 들어옵니다
         "placeholder:text-muted-soft",
         // 파일 선택 버튼은 브라우저 기본 스타일을 지우고 라벨만 남깁니다
