@@ -9,6 +9,9 @@
 | 위험도 | 이슈 | 분류 | 상태 | 발견일 |
 |---|---|---|---|---|
 | **8** | [tailwind-merge가 커스텀 타이포 토큰을 색상으로 오인해 클래스를 조용히 삭제](2026-08-08-tailwind-merge-typography-collision.md) | 설정 충돌 | 해결됨 | 2026-08-08 |
+| **7** | [Input 테두리가 WCAG 비텍스트 대비 3:1에 미달](2026-08-08-input-border-nontext-contrast.md) | 접근성 규약 위반 | 해결됨 | 2026-08-08 |
+| **6** | [Claude Design의 `_ds` 토큰과 로컬 토큰이 같은 이름에 다른 값](2026-08-08-design-system-token-name-collision.md) | 설정 충돌 | 차단 장치 마련 | 2026-08-08 |
+| **6** | [Tailwind v4의 `translate-y-*`는 `transform`이 아니라 `translate` 속성](2026-08-08-tailwind-v4-translate-not-transform.md) | 동작 불일치 | 해결됨 | 2026-08-08 |
 | **4** | [@vitejs/plugin-react 설치가 @babel/core 7↔8 peer 충돌로 실패](2026-08-08-vitejs-plugin-react-babel-core-conflict.md) | 라이브러리 충돌 | 해결됨 | 2026-08-08 |
 | **3** | [Radix Dialog에 aria-modal이 없어 접근성 테스트가 실패](2026-08-08-radix-dialog-aria-modal-absent.md) | 동작 불일치 | 해결됨 | 2026-08-08 |
 
